@@ -1,6 +1,7 @@
 package com.udemy.microservices.course.cards.controllers;
 
 import com.udemy.microservices.course.cards.constants.CardConstants;
+import com.udemy.microservices.course.cards.dtos.CardContactInfoDto;
 import com.udemy.microservices.course.cards.dtos.CardDto;
 import com.udemy.microservices.course.cards.dtos.ErrorResponseDto;
 import com.udemy.microservices.course.cards.dtos.ResponseDto;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,24 @@ import javax.validation.constraints.Pattern;
 public class CardController {
 
     private final ICardService cardService;
+    private final CardContactInfoDto cardContactInfoDto;
+
+    @Value("${build.version}")
+    private String buildVersion;
+
+    @Operation(summary = "Get build details")
+    @ApiResponse(responseCode = "200", description = "Build Details")
+    @GetMapping("/build-details")
+    public ResponseEntity<String> getBuildDetails() {
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+    @Operation(summary = "Get contact details")
+    @ApiResponse(responseCode = "200", description = "Contact Details")
+    @GetMapping("/contact-details")
+    public ResponseEntity<CardContactInfoDto> getContactDetails() {
+        return ResponseEntity.status(HttpStatus.OK).body(cardContactInfoDto);
+    }
 
     @Operation(summary = "Create Card REST API", description = "REST API to create new Card inside EazyBank")
     @ApiResponses({
